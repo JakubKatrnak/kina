@@ -52,14 +52,10 @@ public function form()
 		}
 		else
 		{
-			if ( $this->ionAuth->loggedIn() ) {
 				echo view('layout/header_loggedIn', ['title' => 'Přidej položku']);
 				echo view('content/form');
 				echo view('layout/footer');
-			}
-			else{
-				throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-			}
+
 		}	
 	}
 	else 
