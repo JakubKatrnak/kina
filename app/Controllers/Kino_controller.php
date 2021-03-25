@@ -27,18 +27,46 @@ public function form()
 
 	$this->ionAuth = new \IonAuth\Libraries\IonAuth(); 
 
-	$Kino_model = new Kino_model();
-	$form = $Kino_model->findAll();	
-
 	if ( $this->ionAuth->loggedIn() ) {
 
-		echo view('layout/header_login');
-		echo view('content/form');
-		echo view('layout/footer');
+		$model = new Kino_model();
+
+		if ($this->request->getMethod() === 'post' && $this->validate([
+				'nazev_filmu' => 'required|min_length[3]|max_length[255]',
+				'delka'  => 'required',
+			]))
+		{
+			$model->save([
+				'nazev_filmu' => $this->request->getPost('nazev_filmu'),
+
+				'alternativni_filmu'  => $this->request->getPost('alternativni_filmu'),
+				'delka'  => $this->request->getPost('delka'),
+				'typ' => $this->request->getPost('typ'),
+				'druh' => $this->request->getPost('druh'),
+			]);
+	
+			echo view('layout/header_loggedIn', ['title' => 'Položka přidáná!']);
+			echo view('content/form');
+			echo view('layout/footer');
+	
+		}
+		else
+		{
+			if ( $this->ionAuth->loggedIn() ) {
+				echo view('layout/header_loggedIn', ['title' => 'Přidej položku']);
+				echo view('content/form');
+				echo view('layout/footer');
+			}
+			else{
+				throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+			}
+		}	
 	}
 	else 
 		
+	
 	throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        
+    }
+}
 
-}
-}

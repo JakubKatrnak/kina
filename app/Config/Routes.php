@@ -32,9 +32,11 @@ $routes->setAutoRoute(true);
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->get('/', 'Home::index');
+$routes->get('/', 'Kino_controller::home');
 $routes->get('/home', 'Kino_controller::home');
 $routes->get('/form', 'Kino_controller::form');
+
+$routes->match(['get', 'post'], 'content/form', 'Kino_controller::from');
 
 $routes->group('auth', ['namespace' => 'IonAuth\Controllers'], function ($routes) {
     $routes->get('/', 'Auth::index');

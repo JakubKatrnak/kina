@@ -4,6 +4,7 @@ use CodeIgniter\Model;
 
 class Kino_model extends Model
 {
-	protected $table      = 'nazev';
-    protected $primaryKey = 'id_jazyk';
+	protected $table      = 'filmy';
+    protected $primaryKey = 'id_filmy';
+    protected $allowedFields = ['delka'];
 }
