@@ -3,17 +3,33 @@
     
     <h2 id="menu"><?= esc($title) ?></h2> 
     
-    <?= \Config\Services::validation()->listErrors() ?>
+    <div id="text_def"><?= \Config\Services::validation()->listErrors() ?></div>
     
-    <form action="/kina/form" method="post">
+    <form action="<?= base_url("form_submit"); ?>" method="post">
     <?= csrf_field() ?>
     <div class="form-group">
-        <label for="nazev_filmu">Název filmu</label>
-        <input type="input" class="form-control" name="nazev_knihy">
+        <div class="row">
+            <div class="col">
+                <label for="nazev_filmu">Originální název filmu</label>
+                <input type="input" class="form-control" name="nazev_filmu">
+            </div>
+            <div class="col">
+                <label for="jazyk">Jazyk</label>
+                <input type="input" class="form-control" name="jazyk">
+            </div>
+         </div>
     </div>
     <div class="form-group">
-        <label for="alternativni_nazev">Alternativní název</label>
-        <input type="input" class="form-control" name="alternativni_nazev">
+    <div class="row">
+            <div class="col">
+                <label for="alt_nazev">alternativní název</label>
+                <input type="input" class="form-control" name="alt_nazev">
+            </div>
+            <div class="col">
+                <label for="jazyk_alt">Jazyk</label>
+                <input type="input" class="form-control" name="jazyk_alt">
+            </div>
+         </div>
     </div>
     <div class="form-group">
         <label for="delka">Délka</label>
@@ -27,7 +43,7 @@
         </select>
     </div>
     <div class="form-group">   
-        <label for="druh">Druh</label>
+        <label for="druh">Zanr</label>
         <select name="druh"  class="form-control">
             <option value="1">Komedie</option>
             <option value="2">Thriller</option>

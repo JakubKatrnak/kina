@@ -36,7 +36,7 @@ $routes->get('/', 'Kino_controller::home');
 $routes->get('/home', 'Kino_controller::home');
 $routes->get('/form', 'Kino_controller::form');
 
-$routes->match(['get', 'post'], 'content/form', 'Kino_controller::from');
+$routes->post('/form_submit', 'Kino_controller::form');
 
 $routes->group('auth', ['namespace' => 'IonAuth\Controllers'], function ($routes) {
     $routes->get('/', 'Auth::index');
