@@ -5,7 +5,7 @@ use \App\Models\Nazev_model;
 
 class Kino_controller extends BaseController
 {
- public function home()
+	public function home()
  {
 	$this->ionAuth = new \IonAuth\Libraries\IonAuth(); 
 
@@ -26,63 +26,43 @@ class Kino_controller extends BaseController
 public function form()
 {
 
+	helper(['form', 'url']);
+
 	$this->ionAuth = new \IonAuth\Libraries\IonAuth(); 
 
 	if ( $this->ionAuth->loggedIn() ) {
 
-		$nazev_model = new Nazev_model();
-		$film_model = new Kino_model();
-
-		if ($this->request->getMethod() === 'post' && $this->validate([
-				'nazev_filmu' => 'required|min_length[3]|max_length[255]',
-				'delka'  => 'required',
-				'jazyk'  => 'required',
-			]))
+		$error = $this->validate([
+			'nazev_filmu'	=>	'required',
+			'jazyk'			=>	'required',
+			'delka'			=>	'required'
+		]);
+		
+		if(!$error)
 		{
-			$film_data = [
-				
-				'delka'  			=> $this->request->getPost('delka'),
-				'id_typ'			=> $this->request->getPost('typ'),
-				'id_zanr' 			=> $this->request->getPost('druh'),
-			];
+			echo view('layout/header_loggedIn');
+			echo view('content/form', ['error' 	=> $this->validator]);
+			echo view('layout/footer');
+		}
+		else{
+			
+			$db = db_connect();
+			$kino_model = new Kino_model($db);
 
-			$og_nazev_data = [			
-				
-				'nazev' 			=> $this->request->getPost('nazev_filmu'),
-				'jazyk'				=> $this->request->getPost('jazyk'),
-				'originalni'		=> 1,
+			$kino_model->save(
+				$d = $this->request->getVar('delka'),
+				$z = $this->request->getVar('druh'),
+				$t = $this->request->getVar('typ'),
+				$n = $this->request->getVar('nazev_filmu'),
+				$j = $this->request->getVar('jazyk'),
+				$na = $this->request->getVar('nazev_alt'),
+				$ja = $this->request->getVar('jazyk_alt'),
+			);
 
-			];
-
-			if($this->request->getPost('alt_nazev') != null)
-			{
-				$alt_nazev_data = [			
-				
-					'nazev' 		=> $this->request->getPost('alt_nazev'),
-					'jazyk'			=> $this->request->getPost('jazyk_alt'),
-					'originalni'	=> 0,
-				];
-				
-				$nazev_model->insert($alt_nazev_data);
-			}
-			else
-
-
-			$film_model->insert($film_data);
-			$nazev_model->insert($og_nazev_data);
-
-			echo view('layout/header_loggedIn', ['title' => 'Položka přidáná!']);
+			echo view('layout/header_loggedIn');
 			echo view('content/form');
 			echo view('layout/footer');
-	
 		}
-		else
-		{
-				echo view('layout/header_loggedIn', ['title' => 'Něco je špatně']);
-				echo view('content/form');
-				echo view('layout/footer');
-
-		}	
 	}
 	else 
 		
@@ -90,5 +70,80 @@ public function form()
 	throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         
     }
+
+
+	public function edit()
+	{
+	   $this->ionAuth = new \IonAuth\Libraries\IonAuth(); 
+	   
+		$db = db_connect();
+	   $kino_model = new Kino_model($db);
+   
+	   if ( $this->ionAuth->loggedIn() ) {
+
+
+				$data['edit'] = $kino_model->getFilms();
+				
+			   echo view('layout/header_loggedIn');
+			   echo view('content/edit', $data);
+			   echo view('layout/footer');
+		   }
+	   else 
+   
+	   throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+   
+   }
+
+
+   
+	public function edit_film($id_filmu)
+	{
+	   $this->ionAuth = new \IonAuth\Libraries\IonAuth(); 
+	   
+		$db = db_connect();
+	   $kino_model = new Kino_model($db);
+   
+	   if ( $this->ionAuth->loggedIn() ) {
+
+				$data['edit_film'] = $kino_model->getFilm($id_filmu);
+				$data['edit_film_og'] = $kino_model->getFilmOG($id_filmu);
+				$data['edit'] = $kino_model->getFilms();
+
+				$error = $this->validate([
+					'nazev_filmu'	=>	'required',
+					'jazyk'			=>	'required',
+					'delka'			=>	'required'
+				]);
+				
+				if(!$error)
+				{
+					echo view('layout/header_loggedIn');
+					echo view('content/edit_film', $data, ['error' 	=> $this->validator]);
+					echo view('layout/footer');
+
+				}
+				else{
+	   
+				   $kino_model->edit_update(
+						$id_filmu,
+						$d = $this->request->getVar('delka'),
+						$z = $this->request->getVar('druh'),
+						$t = $this->request->getVar('typ'),
+						$n = $this->request->getVar('nazev_filmu'),
+						$j = $this->request->getVar('jazyk'),
+						$na = $this->request->getVar('nazev_alt'),
+						$ja = $this->request->getVar('jazyk_alt'),
+				   );
+				   	
+				 	  echo view('layout/header_loggedIn');
+					echo view('content/edit', $data);
+					echo view('layout/footer');
+				}
+		   }
+	   else 
+   
+	   throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+   
+   }
 }
 

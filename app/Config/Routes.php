@@ -35,8 +35,11 @@ $routes->setAutoRoute(true);
 $routes->get('/', 'Kino_controller::home');
 $routes->get('/home', 'Kino_controller::home');
 $routes->get('/form', 'Kino_controller::form');
+$routes->get('/edit', 'Kino_controller::edit');
+$routes->get('/edit_film/(:num)', 'Kino_controller::edit_film/$1');
 
 $routes->post('/form_submit', 'Kino_controller::form');
+$routes->post('/edit_film/(:num)', 'Kino_controller::edit_film/$1');
 
 $routes->group('auth', ['namespace' => 'IonAuth\Controllers'], function ($routes) {
     $routes->get('/', 'Auth::index');
