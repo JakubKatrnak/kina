@@ -37,6 +37,7 @@ $routes->get('/home', 'Kino_controller::home');
 $routes->get('/form', 'Kino_controller::form');
 $routes->get('/edit', 'Kino_controller::edit');
 $routes->get('/edit_film/(:num)', 'Kino_controller::edit_film/$1');
+$routes->get('/delete_film/(:num)/(:num)', 'Kino_controller::delete_film/$1/$2');
 
 $routes->post('/form_submit', 'Kino_controller::form');
 $routes->post('/edit_film/(:num)', 'Kino_controller::edit_film/$1');
@@ -46,6 +47,10 @@ $routes->group('auth', ['namespace' => 'IonAuth\Controllers'], function ($routes
     $routes->add('login', 'Auth::login');
     $routes->get('logout', 'Auth::logout');
     $routes->get('forgot_password', 'Auth::forgot_password');
+    $routes->get('edit_user/(:num)', 'Auth::edit_user/$1');
+    $routes->post('edit_user/(:num)', 'Auth::edit_user/$1');
+    $routes->get('create_user', 'Auth::create_user');
+    $routes->post('create_user', 'Auth::create_user');
 });
 
 

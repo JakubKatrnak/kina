@@ -3,6 +3,7 @@
 
     <?php $validation = \Config\Services::validation();?>
     <?php foreach($edit_film_og as $film): ?>
+      
       <form action="<?= $id_filmu=$film->id_filmy; base_url("edit_film/".$id_filmu); ?>" method="post">
       <div class="form-group">
           <div class="row">
@@ -14,6 +15,7 @@
                         echo '<div class="alert alert-danger mt-2">'.$validation->getError('nazev_filmu').'</div>';
                     }
                 ?>
+                    <input style="transform: scale(0);" type="input" class="form-control" name="id_nazev" value="<?php echo $film->id_jazyk;?>">
               </div>
               <div class="col">
                   <label for="jazyk">Jazyk</label>
@@ -68,8 +70,7 @@
           </select>
       </div>
       <?php endforeach; ?>
-      <button type="submit"  name='submit' value='Submit' class="btn btn-primary">Submit</button>
-      <button type="submit"  name='submit' value='Submit' class="btn btn-danger">Delete</button>
+      <button type="submit"  name='submit' value='Submit' class="btn btn-primary">edit</button>
       </form>      
   </div>
 

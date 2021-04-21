@@ -126,6 +126,7 @@ public function form()
 	   
 				   $kino_model->edit_update(
 						$id_filmu,
+						$in = $this->request->getVar('id_nazev'),
 						$d = $this->request->getVar('delka'),
 						$z = $this->request->getVar('druh'),
 						$t = $this->request->getVar('typ'),
@@ -144,6 +145,21 @@ public function form()
    
 	   throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
    
+   }
+
+   public function delete_film($id_filmu, $in){
+	$db = db_connect();
+	
+	$kino_model = new Kino_model($db);
+	
+	$data['edit'] = $kino_model->getFilms();
+
+	$kino_model->delete_film($id_filmu, $in);
+
+	echo view('layout/header_loggedIn');
+	echo view('content/edit', $data);
+	echo view('layout/footer');
+
    }
 }
 

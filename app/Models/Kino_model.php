@@ -97,13 +97,13 @@ class Kino_model
         }
     }
 
-    function edit_update($id_filmu, $d, $z, $t, $n, $j, $na, $ja){
+    function edit_update($id_filmu, $in, $d, $z, $t, $n, $j, $na, $ja){
         
-        $nazev_id=0;
-        
+    
         $filmy= $this->db->table('filmy');
         $nazev= $this->db->table('nazev');
         $nazev_filmu= $this->db->table('nazev_filmu');
+        $builder= $this->db->table('filmy');
 
         $filmy->set('delka', $d);
         $filmy->set('id_typ', $t);
@@ -111,33 +111,47 @@ class Kino_model
         $filmy->where('id_filmy', $id_filmu);
         $filmy->update(); 
         
-      /*  $nazev->set('nazev', $n);
+        $nazev->set('nazev', $n);
         $nazev->set('jazyk', $j);
-        $nazev->where('originalni', 1);
+        $nazev->where('id_jazyk', $in);
         $nazev->update();
-        $nazev_id = $this->db->insertID();
 
-        $nazev_filmu->set('id_jazyku', $nazev_id);
+        $nazev_filmu->set('id_jazyku', $in);
         $nazev_filmu->set('id_filmu', $id_filmu);
         $nazev_filmu->where('id_filmu', $id_filmu);
-        $nazev_filmu->where('id_jazyku', $nazev_id);
+        $nazev_filmu->where('id_jazyku', $in);
         $nazev_filmu->update();
 
         if($na != null)
         {
             $nazev->set('nazev', $na);
             $nazev->set('jazyk', $ja);
-            $nazev->where('originalni', 0);
+            $nazev->where('id_jazyk', $in);
             $nazev->update();
             $nazev_id = $this->db->insertID();
     
-            $nazev_filmu->set('id_jazyku', $nazev_id);
+            $nazev_filmu->set('id_jazyku', $in);
             $nazev_filmu->set('id_filmu', $id_filmu);
             $nazev_filmu->where('id_filmu', $id_filmu);
-            $nazev_filmu->where('id_jazyku', $nazev_id);
+            $nazev_filmu->where('id_jazyku', $in);
             $nazev_filmu->update();
-        } */
+        } 
     
     }
+    
+    function delete_film($id_filmu, $in)
+    {
+        $filmy= $this->db->table('filmy');
+        $nazev= $this->db->table('nazev');
+        $nazev_filmu= $this->db->table('nazev_filmu');
+    
+        $filmy->where('id_filmy', $id_filmu);
+        $filmy->delete();
 
+        $nazev->where('id_jazyk', $in);
+        $nazev->delete();
+
+        $nazev_filmu->where('id_filmu', $id_filmu);    
+        $nazev_filmu->delete();             
+    }
 }
